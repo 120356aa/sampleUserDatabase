@@ -1,5 +1,4 @@
 module.exports = {
-
     development: {
       client: 'sqlite3',
       connection: {
@@ -14,3 +13,6 @@ module.exports = {
       },
     }
 };
+
+// Required file that sets up the knex environment for you
+// npx knex commands run based off of these settings

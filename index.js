@@ -1,10 +1,10 @@
-const express = require('express');
-const helmet = require('helmet');
-const bcrypt = require('bcryptjs');
+const express = require('express'); // Express server
+const helmet = require('helmet');   // Mild prob protection
+const bcrypt = require('bcryptjs'); // Light Encryption
 const PORT = 5000;
 
 const db = require('./data/dbConfig.js');
-const Users = require('./users/users-modal.js');
+const Users = require('./users/users-modal.js');    // SQL functions for Users
 
 const server = express();
 
@@ -30,10 +30,12 @@ const sessionConfig = {
     })
   };
   
+  // Initialize the server
   server.use(session(sessionConfig));
   server.use(helmet());
   server.use(express.json());
   
+  // Restricted middleware for protected routes
   function restricted(req, res, next) {
     const { username, password } = req.headers;
   
@@ -54,13 +56,11 @@ const sessionConfig = {
     }
   }
   
-  server.get('/', (req, res) => {
-    res.send("It's alive!");
-  });
-  
+  // Using the above restricted middle ware to prevent users
+  // who are not logged in from accessing the database
   server.get('/api/users', restricted, (req, res) => {
     if (req.session && !req.session.user) {
-      return res.status(401).json({ error: 'You shall not pass!' })
+      return res.status(401).json({ error: 'Restricted route. Login Required' })
     } else {
       Users.find()
       .then(users => res.json(users))
@@ -68,6 +68,7 @@ const sessionConfig = {
     }
   });
   
+  // Register new user
   server.post('/api/register', (req, res) => {
     let user = req.body;
     const hash = bcrypt.hashSync(user.password, 10);
@@ -80,6 +81,7 @@ const sessionConfig = {
       .catch(err => res.status(500).json(err));
   });
   
+  // Login User
   server.post('/api/login', (req, res) => {
     let { username, password } = req.body;
   
@@ -100,6 +102,7 @@ const sessionConfig = {
       .catch(error => res.status(500).json(error));
   });
   
+  // Logout User
   server.get('/api/logout', (req, res) => {
     if (req.session)
       req.session.destroy(err => {
