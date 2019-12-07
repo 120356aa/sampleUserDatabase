@@ -4,6 +4,7 @@ import { Route, NavLink, withRouter } from 'react-router-dom';
 import './App.css';
 import Login from './components/login.js';
 import Users from './components/users.js';
+import Register from './components/register.js';
 
 class App extends Component {
   logout = () => {
@@ -18,6 +19,7 @@ class App extends Component {
           <nav>
             <NavLink to='/login'>Login</NavLink>
             <NavLink to='/users'>Users</NavLink>
+            <NavLink to='/register'>Register</NavLink>
             <button onClick={this.logout}>Logout</button>
           </nav>
         </header>
@@ -25,6 +27,7 @@ class App extends Component {
         <main>
           <Route path='/login' component={Login} />
           <Route path='/users' component={Users} />
+          <Route path='/register' component={Register} />
         </main>
       </div>
     );
